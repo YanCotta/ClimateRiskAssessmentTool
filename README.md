@@ -94,3 +94,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - OpenWeather API for weather data
 - Scientific community for climate research
 - Open source community for various tools and libraries
+
+## CHANGELOG
+- Implemented threat duration estimation
+- Added blackout risk assessment
+- Introduced health hazard analysis
+- Expanded emergency recommendations
+- Enhanced data visualization features

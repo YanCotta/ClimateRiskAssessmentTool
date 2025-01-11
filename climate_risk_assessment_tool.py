@@ -123,6 +123,17 @@ class ClimateRiskAnalyzer:
             logger.error(f"Failed to fetch weather data: {e}")
             return []
 
+    def _estimate_threat_duration(self, weather_data: List[WeatherData]) -> int:
+        # Simple placeholder logic for duration in days
+        if not weather_data:
+            return 0
+        return 3  # Example fixed value
+
+    def _calculate_blackout_risk(self, weather_data: List[WeatherData]) -> float:
+        # Basic placeholder logic for blackout risk
+        # ...existing code...
+        return 0.5
+
     def analyze_risks(self, location: Location, weather_data: List[WeatherData]) -> Dict[str, float]:
         """
         Analyze various climate risks based on weather and location data.
@@ -138,6 +149,8 @@ class ClimateRiskAnalyzer:
             'heatwave': self._calculate_heatwave_risk(weather_data),
             'hurricane': self._calculate_hurricane_risk(weather_data)
         }
+        risks['blackout'] = self._calculate_blackout_risk(weather_data)
+        risks['threat_duration'] = float(self._estimate_threat_duration(weather_data))
         return risks
 
     def get_recommendations(self, risks: Dict[str, float]) -> Dict[str, List[str]]:
@@ -170,6 +183,11 @@ class ClimateRiskAnalyzer:
                         "Stock up on water and electrolyte drinks",
                         "Identify nearby cooling centers"
                     ])
+                elif event == 'blackout':
+                    recommendations['immediate'].extend([
+                        "Prepare backup power sources",
+                        "Store extra batteries and chargers"
+                    ])
 
             if risk > 0.5:  # Medium-term risks
                 recommendations['short_term'].extend([
@@ -177,12 +195,19 @@ class ClimateRiskAnalyzer:
                     "Make home improvements for climate resilience",
                     "Create family emergency plan"
                 ])
+                if event == 'blackout':
+                    recommendations['short_term'].append("Consider buying a generator")
 
             if risk > 0.3:  # Long-term considerations
                 recommendations['long_term'].extend([
                     "Consider climate migration options",
                     "Research climate-resilient regions",
                     "Plan for long-term adaptation strategies"
+                ])
+            if event == 'threat_duration' and risk > 2:
+                recommendations['immediate'].extend([
+                    "Stock up on food and water for several days",
+                    "Secure critical supplies for longer outages"
                 ])
         
         return recommendations
@@ -206,6 +231,18 @@ class ClimateRiskAnalyzer:
             color_continuous_scale='RdYlGn_r'
         )
         return fig
+
+    def health(self, risks: Dict[str, float]) -> Dict[str, str]:
+        hazards = {}
+        if risks.get('flood', 0) > 0.3:
+            hazards['flood'] = "Increased risk of waterborne diseases and infections"
+        if risks.get('heatwave', 0) > 0.3:
+            hazards['heatwave'] = "Risk of dehydration, heat stroke, and exhaustion"
+        if risks.get('hurricane', 0) > 0.3:
+            hazards['hurricane'] = "Possible injuries from debris and contaminated floodwater"
+        if risks.get('blackout', 0) > 0.3:
+            hazards['blackout'] = "Potential spoilage of refrigerated food and limited healthcare access"
+        return hazards
 
 def load_topography_data(filepath):
     """
@@ -281,12 +318,19 @@ def main():
         for event, risk in risks.items():
             print(f"{event.capitalize()}: {risk:.2%}")
         
+        print(f"\nEstimated threat duration: {risks.get('threat_duration', 0)} day(s)")
+        
         print("\nRecommended Actions:")
         for timeframe, actions in recommendations.items():
             print(f"\n{timeframe.replace('_', ' ').title()}:")
             for action in actions:
                 print(f"- {action}")
         
+        health_hazards = analyzer.health(risks)
+        print("\nPotential Health Hazards:")
+        for event, hazard in health_hazards.items():
+            print(f"- {event.capitalize()}: {hazard}")
+
         # Show visualization
         analyzer.visualize_risks(risks).show()
     except Exception as e:

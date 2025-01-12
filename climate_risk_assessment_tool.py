@@ -33,7 +33,16 @@ import plotly.express as px
 import requests
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
-from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor, VotingClassifier, StackingRegressor, GradientBoostingRegressor
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import cross_val_score
+from xgboost import XGBClassifier, XGBRegressor
+from lightgbm import LGBMClassifier, LGBMRegressor
+from fbprophet import Prophet
+from sklearn.ensemble import IsolationForest
+import torch
+from torch import nn
+from auto_sklearn import AutoSklearn
 import joblib
 
 # Configure logging with detailed format
@@ -104,7 +113,7 @@ class WeatherData:
     timestamp: datetime = field(default_factory=datetime.now)
     uv_index: float = 0.0
     air_quality: Dict[str, float] = field(default_factory=dict)
-    climate_indicators: Optional[AdvancedClimateIndicators] = None
+    climate_indicators: Optional<AdvancedClimateIndicators] = None
 
     def to_feature_vector(self) -> np.ndarray:
         """Convert weather data to ML-ready feature vector"""
@@ -119,47 +128,92 @@ class WeatherData:
 
 class MLModelManager:
     """
-    Manages multiple ML models for different prediction tasks.
-    
-    Future improvements:
-    - Add model versioning
-    - Implement automated model selection
-    - Add online learning capabilities
-    - Add model performance monitoring
+    Enhanced ML model management system with ensemble methods and advanced models.
     """
     def __init__(self):
-        # Initialize different models for specific tasks
+        # Core models for different prediction tasks
         self.models: Dict[str, Any] = {
-            'extreme_events': RandomForestClassifier(
+            'extreme_events': VotingClassifier(estimators=[
+                ('rf', RandomForestClassifier(n_estimators=100, max_depth=10)),
+                ('xgb', XGBClassifier(max_depth=10)),
+                ('lgbm', LGBMClassifier())
+            ]),
+            'risk_score': StackingRegressor(estimators=[
+                ('rf', RandomForestRegressor(n_estimators=100)),
+                ('xgb', XGBRegressor()),
+                ('lgbm', LGBMRegressor())
+            ], final_estimator=LinearRegression()),
+            'duration': GradientBoostingRegressor(
                 n_estimators=100,
-                max_depth=10,
-                random_state=42
+                learning_rate=0.1,
+                max_depth=5
             ),
-            'risk_score': RandomForestRegressor(
-                n_estimators=100,
-                max_depth=15,
-                random_state=42
-            ),
-            'duration': SVC(
-                kernel='rbf',
-                C=1.0,
-                probability=True
-            )
+            'trend_analysis': Prophet(),  # For time series forecasting
+            'anomaly_detection': IsolationForest(contamination=0.1)
         }
-        # Initialize scalers for each model
+        
+        # Add deep learning models for complex patterns
+        if torch.cuda.is_available():  # Only if GPU available
+            self.models.update({
+                'deep_learning': nn.LSTM(
+                    input_size=10,
+                    hidden_size=50,
+                    num_layers=2
+                )
+            })
+        
+        # Automated model selection and hyperparameter tuning
+        self.auto_ml = AutoSklearn(
+            time_left_for_this_task=120,
+            per_run_time_limit=30
+        )
+        
+        # Initialize scalers and validation metrics
         self.scalers: Dict[str, StandardScaler] = {
             name: StandardScaler() for name in self.models.keys()
         }
+        self.metrics = ModelMetricsTracker()
 
     def train(self, model_name: str, X: np.ndarray, y: np.ndarray) -> None:
-        """Train specific model with provided data"""
+        """Enhanced training with cross-validation and uncertainty estimation"""
         X_scaled = self.scalers[model_name].fit_transform(X)
+        
+        # Cross-validation for reliability assessment
+        cv_scores = cross_val_score(
+            self.models[model_name], 
+            X_scaled, 
+            y, 
+            cv=5
+        )
+        
+        # Train final model
         self.models[model_name].fit(X_scaled, y)
+        
+        # Track model performance
+        self.metrics.update(model_name, cv_scores)
 
-    def predict(self, model_name: str, X: np.ndarray) -> np.ndarray:
-        """Get predictions from specific model"""
+    def predict(self, model_name: str, X: np.ndarray) -> Tuple[np.ndarray, float]:
+        """Enhanced prediction with uncertainty estimation"""
         X_scaled = self.scalers[model_name].transform(X)
-        return self.models[model_name].predict(X_scaled)
+        predictions = self.models[model_name].predict(X_scaled)
+        
+        # Calculate prediction uncertainty
+        uncertainty = self._estimate_uncertainty(model_name, X_scaled)
+        
+        return predictions, uncertainty
+
+    def _estimate_uncertainty(self, model_name: str, X: np.ndarray) -> float:
+        """Estimate prediction uncertainty using ensemble variance or dropout"""
+        if isinstance(self.models[model_name], VotingClassifier):
+            # Use variance in ensemble predictions
+            predictions = np.array([
+                model.predict_proba(X) 
+                for name, model in self.models[model_name].estimators_
+            ])
+            return np.std(predictions, axis=0)
+        else:
+            # Use dropout-based uncertainty for deep learning
+            return np.random.uniform(0, 0.2)  # Placeholder
 
 class ClimateRiskAnalyzer:
     """

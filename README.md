@@ -15,6 +15,12 @@
 - [Architecture](#architecture)
 - [Development](#development)
 - [Documentation](#documentation)
+- [Changelog](#changelog)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+- [License](#license)
+- [Team](#team)
+- [Acknowledgments](#acknowledgments)
 
 ## 🌍 Project Impact
 
@@ -169,12 +175,27 @@ class RiskAssessment:
     """
 ```
 
+## 🗺️ Changelog
+
+### v2.5.0 (current)
+- Refactored project structure into `Core`, `data`, and `utils` modules
+- Improved real-time data fetching and processing
+- Enhanced model training and management with versioning
+- Added comprehensive risk scoring and confidence estimation
+- Improved visualization capabilities with Plotly
+- Added health impact analysis module
+- Improved logging and configuration management
+
+### v2.0.0
+- Initial release with basic ML models and risk assessment capabilities
+
 ## 🗺️ Roadmap
 
 ### Q1 2025
 - [ ] Enhanced ensemble methods
 - [ ] Real-time model updating
 - [ ] Improved visualization
+- [ ] Add tests modules and files
 
 ### Q2 2025
 - [ ] Federated learning

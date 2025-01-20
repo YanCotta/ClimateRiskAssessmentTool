@@ -43,3 +43,19 @@ class HealthImpactAnalysis:
             ])
 
         return health_hazards
+
+class HealthImpactAnalysis:
+    def __init__(self):
+        self.vulnerability_factors = {
+            'elderly_population': 1.5,
+            'healthcare_access': 0.8,
+            'air_quality_sensitivity': 1.2
+        }
+    
+    def calculate_vulnerability_score(self, location: Location) -> float:
+        """Calculate population vulnerability score"""
+        score = 1.0
+        for factor, weight in self.vulnerability_factors.items():
+            if getattr(location, factor):
+                score *= weight
+        return score

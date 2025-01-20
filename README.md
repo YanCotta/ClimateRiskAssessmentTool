@@ -177,7 +177,13 @@ class RiskAssessment:
 
 ## 🗺️ Changelog
 
-### v2.5.0 (current)
+### v.2.7.0 (current)
+- Improved future update ouline in changelog 
+- Added a better health impact integration 
+- Refined climate science validation module 
+- Added a test module 
+
+### v2.5.0 
 - Refactored project structure into `Core`, `data`, and `utils` modules
 - Improved real-time data fetching and processing
 - Enhanced model training and management with versioning
@@ -185,22 +191,29 @@ class RiskAssessment:
 - Improved visualization capabilities with Plotly
 - Added health impact analysis module
 - Improved logging and configuration management
+- Improved future update outline in changelog 
+- Added a better health impact integration 
+- Refined Climate Science Validation 
+- Added a test module 
 
 ### v2.0.0
 - Initial release with basic ML models and risk assessment capabilities
 
 ## 🗺️ Roadmap
 
-### Q1 2025
-- [ ] Enhanced ensemble methods
-- [ ] Real-time model updating
-- [ ] Improved visualization
-- [ ] Add tests modules and files
+### v.3.0.0
+#### Required New Features: 
+- Add climate model ensemble integration
+- Implement uncertainty quantification
+- Add demographic vulnerability factors
+- Include ecosystem impact assessment
+- Add extreme event attribution analysis
 
-### Q2 2025
-- [ ] Federated learning
-- [ ] Transfer learning
-- [ ] API improvements
+#### Documentation Improvements:
+- Add scientific methodology documentation
+- Include model validation metrics
+- Add climate science references
+- Document health impact methodologies
 
 ## 🤝 Contributing
 

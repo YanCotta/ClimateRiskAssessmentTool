@@ -1,42 +1,51 @@
-# Climate Risk Assessment and Prediction Tool
-![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
-![TensorFlow](https://img.shields.io/badge/TensorFlow-2.0%2B-orange)
-![License](https://img.shields.io/badge/License-MIT-green)
-![Status](https://img.shields.io/badge/Status-Production--Ready-brightgreen)
+<div align="center">
+  
+# 🌍 Climate Risk Assessment and Prediction Tool
 
-> An enterprise-grade machine learning system for climate risk assessment combining ensemble methods, deep learning, and real-time data analysis. Production-ready with 95%+ prediction accuracy.
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=for-the-badge&logo=python)](https://www.python.org/)
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.0%2B-orange?style=for-the-badge&logo=tensorflow)](https://tensorflow.org/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Production--Ready-brightgreen?style=for-the-badge)]()
 
-## 📚 Table of Contents
-- [Project Impact](#project-impact)
-- [Features](#features)
-- [Technical Stack](#technical-stack)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Architecture](#architecture)
-- [Development](#development)
-- [Documentation](#documentation)
-- [Changelog](#changelog)
-- [Roadmap](#roadmap)
-- [Contributing](#contributing)
-- [License](#license)
-- [Team](#team)
-- [Acknowledgments](#acknowledgments)
+> Enterprise-grade climate risk assessment powered by ensemble ML methods & deep learning
+> 
+> **95%+ Prediction Accuracy** | **Real-time Analysis** | **Production Ready**
 
-## 🌍 Project Impact
+[Features](#-features) •
+[Installation](#️-installation) •
+[Documentation](#-documentation) •
+[Contributing](#-contributing)
 
-In an era of climate instability, this tool provides:
-- Critical risk assessment for communities
-- Early warning system for extreme events
-- Infrastructure vulnerability analysis
-- Health impact predictions
-- Adaptation strategy recommendations
+</div>
+
+---
+
+## 📊 Project Impact
+
+<table>
+<tr>
+<td width="50%">
 
 ### Key Applications
-- Emergency response planning
-- Infrastructure protection
-- Public health management
-- Resource allocation
-- Policy decision support
+- 🚨 Emergency response planning
+- 🏗️ Infrastructure protection
+- 🏥 Public health management
+- 📊 Resource allocation
+- 📜 Policy decision support
+
+</td>
+<td>
+
+### Core Benefits
+- 🎯 Critical risk assessment
+- ⚡ Early warning system
+- 🔍 Vulnerability analysis
+- 🫀 Health impact predictions
+- 📋 Adaptation strategies
+
+</td>
+</tr>
+</table>
 
 ## 🚀 Features
 
@@ -60,22 +69,35 @@ def ensemble_framework():
 
 ## 💻 Technical Stack
 
-### Core Technologies
-- **Machine Learning**
-  - scikit-learn 1.0+
-  - XGBoost 1.5+
-  - LightGBM 3.3+
-  - TensorFlow 2.7+
+<table>
+<tr>
+<td>
 
-- **Data Processing**
-  - NumPy 1.21+
-  - Pandas 1.4+
-  - Dask 2022.1+
+### 🤖 Machine Learning
+- scikit-learn `1.0+`
+- XGBoost `1.5+`
+- LightGBM `3.3+`
+- TensorFlow `2.7+`
 
-- **Visualization**
-  - Plotly 5.5+
-  - Dash 2.0+
-  - Matplotlib 3.5+
+</td>
+<td>
+
+### 📊 Data Processing
+- NumPy `1.21+`
+- Pandas `1.4+`
+- Dask `2022.1+`
+
+</td>
+<td>
+
+### 📈 Visualization
+- Plotly `5.5+`
+- Dash `2.0+`
+- Matplotlib `3.5+`
+
+</td>
+</tr>
+</table>
 
 ## ⚙️ Installation
 
@@ -139,11 +161,15 @@ graph TD
 
 ## 📊 Performance
 
+<div align="center">
+
 | Model | Accuracy | Precision | Recall | F1-Score |
-|-------|----------|-----------|---------|-----------|
-| Ensemble | 96.5% | 0.95 | 0.97 | 0.96 |
+|:-----:|:--------:|:---------:|:-------:|:--------:|
+| **Ensemble** | **96.5%** | **0.95** | **0.97** | **0.96** |
 | LSTM | 94.3% | 0.93 | 0.95 | 0.94 |
 | XGBoost | 93.8% | 0.92 | 0.94 | 0.93 |
+
+</div>
 
 ## 🔧 Development
 
@@ -229,9 +255,14 @@ MIT License - see [LICENSE](LICENSE)
 
 ## 👥 Team
 
-- **Lead Developer:** Yan Cotta
-- **Email:** yanpcotta@gmail.com
-- **Issues:** [GitHub Issues](https://github.com/YanCotta/climate-risk/issues)
+<div align="center">
+
+| Role | Name | Contact |
+|:----:|:----:|:-------:|
+| **Lead Developer** | Yan Cotta | [yanpcotta@gmail.com](mailto:yanpcotta@gmail.com) |
+| **Issues** | - | [GitHub Issues](https://github.com/YanCotta/climate-risk/issues) |
+
+</div>
 
 ## 🙏 Acknowledgments
 

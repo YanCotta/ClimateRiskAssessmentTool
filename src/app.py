@@ -13,7 +13,7 @@ from .config import settings
 from .infrastructure.database.session import get_db, init_db
 from .interfaces.api.routers import locations, weather, risk
 from .interfaces.api.middleware import (
-    LoggingMiddleware,
+    get_logging_middleware,
     VersioningMiddleware,
     RateLimitMiddleware,
     SecurityHeadersMiddleware,
@@ -84,7 +84,14 @@ def configure_middleware(app: FastAPI) -> None:
     The order of middleware is important! They are executed in reverse order.
     The first middleware is the last to process the request and first to process the response.
     """
-    # 1. Security headers (first to process response, last to process request)
+    # 1. Logging (last to process request, first to process response)
+    get_logging_middleware(
+        app,
+        log_request_body=settings.LOG_REQUESTS,
+        log_response_body=settings.LOG_RESPONSES,
+    )
+    
+    # 2. Security headers (first to process response, last to process request)
     add_security_headers(
         app,
         headers={
@@ -102,7 +109,7 @@ def configure_middleware(app: FastAPI) -> None:
         }
     )
     
-    # 2. Rate limiting (before request processing starts)
+    # 3. Rate limiting (before request processing starts)
     if settings.RATE_LIMIT_ENABLED:
         app.add_middleware(
             RateLimitMiddleware,
@@ -111,7 +118,7 @@ def configure_middleware(app: FastAPI) -> None:
             redis_url=settings.REDIS_URL,
         )
     
-    # 3. Versioning (after rate limiting, before request processing)
+    # 4. Versioning (after rate limiting, before request processing)
     app.add_middleware(
         VersioningMiddleware,
         default_version=settings.API_DEFAULT_VERSION,
@@ -119,9 +126,6 @@ def configure_middleware(app: FastAPI) -> None:
         version_header=settings.API_VERSION_HEADER,
         version_regex=r"^v(\d+(\.\d+)*)$",
     )
-    
-    # 4. Logging (last to process request, first to process response)
-    app.add_middleware(LoggingMiddleware)
 
 
 def configure_routers(app: FastAPI) -> None:

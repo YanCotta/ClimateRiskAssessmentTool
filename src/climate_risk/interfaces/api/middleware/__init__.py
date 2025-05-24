@@ -6,6 +6,7 @@ the functionality of the FastAPI application, including:
 
 - Versioning: API versioning support
 - Rate limiting: Request rate limiting
+- Security Headers: Add security-related HTTP headers
 - Error handling: Centralized error handling
 - Logging: Request/response logging
 - Authentication: JWT authentication
@@ -13,6 +14,7 @@ the functionality of the FastAPI application, including:
 """
 from .versioning import VersioningMiddleware, VersionedAPIRoute, version
 from .rate_limiting import RateLimitMiddleware, RateLimitExceeded, get_rate_limiter
+from .security_headers import SecurityHeadersMiddleware, add_security_headers
 
 __all__ = [
     'VersioningMiddleware',
@@ -21,4 +23,6 @@ __all__ = [
     'RateLimitMiddleware',
     'RateLimitExceeded',
     'get_rate_limiter',
+    'SecurityHeadersMiddleware',
+    'add_security_headers',
 ]

@@ -6,15 +6,18 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.95%2B-teal?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
 [![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0%2B-red?style=for-the-badge&logo=sqlalchemy)](https://www.sqlalchemy.org/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=for-the-badge)](https://github.com/psf/black)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json&style=for-the-badge)](https://github.com/astral-sh/ruff)
 
 > Enterprise-grade climate risk assessment API with real-time data processing and analysis
 > 
-> **RESTful API** | **Asynchronous** | **Production Ready**
+> **RESTful API** | **Asynchronous** | **Production Ready** | **Secure by Default**
 
 [Features](#-features) •
 [Installation](#️-installation) •
 [API Documentation](#-api-documentation) •
 [Architecture](#-architecture) •
+[Security](#-security) •
 [Contributing](#-contributing)
 
 </div>
@@ -42,10 +45,20 @@ A robust, scalable API for assessing climate-related risks, built with FastAPI a
   - Historical risk analysis
   - Vulnerability assessment
 
-- **Authentication & Authorization**
-  - JWT-based authentication
-  - Role-based access control
-  - API key support
+- **Security & Performance**
+  - ✅ JWT-based authentication
+  - 🔒 Role-based access control
+  - 🛡️ Rate limiting and request throttling
+  - 🔄 API versioning support
+  - 📊 Comprehensive request/response logging
+  - 🚀 Optimized for high performance
+
+- **Developer Experience**
+  - 📚 Comprehensive API documentation
+  - ✅ Type hints and static type checking
+  - 🧪 Test coverage
+  - 🔄 CI/CD ready
+  - 🐳 Docker support
 
 ## 🚀 Quick Start
 
@@ -53,7 +66,8 @@ A robust, scalable API for assessing climate-related risks, built with FastAPI a
 
 - Python 3.10+
 - PostgreSQL 13+ (or SQLite for development)
-- Redis (for caching, optional)
+- Redis (for rate limiting and caching)
+- Docker (optional, for containerized deployment)
 
 ### Installation
 
@@ -86,8 +100,19 @@ A robust, scalable API for assessing climate-related risks, built with FastAPI a
    ```
 
 6. Run the development server:
+
    ```bash
+   # Development (auto-reload)
    uvicorn src.app:app --reload
+   
+   # Production
+   # uvicorn src.app:app --host 0.0.0.0 --port 8000 --workers 4
+   ```
+
+7. Or run with Docker Compose (recommended for production):
+
+   ```bash
+   docker-compose up -d --build
    ```
 
 ## 🏗️ Project Structure
@@ -116,6 +141,64 @@ Once the application is running, you can access the following documentation:
 - **ReDoc**: http://localhost:8000/api/v1/redoc
 - **OpenAPI Schema**: http://localhost:8000/api/v1/openapi.json
 
+### API Versioning
+
+TheAPI uses semantic versioning (e.g., `v1.0.0`). You can specify the API version in multiple ways:
+
+1. **URL Path**: `/api/v1/endpoint`
+2. **Header**: `Accept: application/vnd.api.v1+json`
+3. **Query Parameter**: `/api/endpoint?version=1`
+4. **Cookie**: `api-version=1`
+
+## 🔒 Security
+
+The API includes several security features:
+
+
+### Rate Limiting
+
+- Default: 100 requests per minute per IP
+- Configurable via environment variables
+- Supports Redis for distributed rate limiting
+
+
+### Security Headers
+
+- Content Security Policy (CSP)
+- X-Content-Type-Options
+- X-Frame-Options
+- X-XSS-Protection
+- HSTS (HTTP Strict Transport Security)
+- Referrer-Policy
+- Permissions-Policy
+
+
+### Authentication
+
+- JWT-based authentication
+- Role-based access control (RBAC)
+- Secure password hashing
+- Token refresh mechanism
+
+
+## 📊 Monitoring & Logging
+
+### Logging
+
+- Structured JSON logging
+- Request/response logging
+- Sensitive data redaction
+- Correlation IDs for request tracing
+
+
+### Monitoring
+
+- Health check endpoint (`/health`)
+- Metrics endpoint (`/metrics`)
+- Performance monitoring
+- Error tracking
+
+
 ## 💻 Technologies Used
 
 ### Backend
@@ -125,14 +208,96 @@ Once the application is running, you can access the following documentation:
 - **Alembic** - Database migrations
 - **Pydantic** - Data validation and settings management
 - **JWT** - Authentication
-- **Redis** - Caching (optional)
+- **Redis** - Rate limiting and caching
+- **Uvicorn** - ASGI server
+- **Gunicorn** - Production WSGI server
+
+### Security
+
+- **Passlib** - Password hashing
+- **python-jose** - JWT implementation
+- **python-multipart** - File uploads
+- **email-validator** - Email validation
+
+
+### Data Processing
+
+- **Pandas** - Data manipulation
+- **NumPy** - Numerical computing
+- **GeoPandas** - Geospatial data
+- **Shapely** - Geometric operations
+
 
 ### Development Tools
 - **pytest** - Testing framework
+- **pytest-cov** - Test coverage
 - **black** - Code formatting
+- **isort** - Import sorting
 - **mypy** - Static type checking
 - **ruff** - Linting
 - **pre-commit** - Git hooks
+- **mypy** - Static type checking
+- **bandit** - Security linting
+- **safety** - Dependency vulnerability scanning
+
+## 🚀 Deployment
+
+### Docker
+
+```bash
+# Build the image
+docker build -t climate-risk-api .
+
+# Run the container
+docker run -d --name climate-risk-api -p 8000:8000 --env-file .env climate-risk-api
+```
+
+### Kubernetes
+
+```yaml
+# Example deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: climate-risk-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: climate-risk-api
+  template:
+    metadata:
+      labels:
+        app: climate-risk-api
+    spec:
+      containers:
+      - name: climate-risk-api
+        image: your-registry/climate-risk-api:latest
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - secretRef:
+            name: climate-risk-secrets
+        resources:
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+```
 
 ## 🤝 Contributing
 

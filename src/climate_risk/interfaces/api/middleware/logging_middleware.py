@@ -183,7 +183,7 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         return {
             k: "[REDACTED]" if k.lower() in self.sensitive_headers else v
             for k, v in headers.items()
-            not k.lower().startswith("x-")
+            if not k.lower().startswith("x-")
         }
 
 

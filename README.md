@@ -1,109 +1,165 @@
 <div align="center">
   
-# 🌍 Climate Risk Assessment and Prediction Tool
+# 🌍 Climate Risk Assessment API
 
-[![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=for-the-badge&logo=python)](https://www.python.org/)
-[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.0%2B-orange?style=for-the-badge&logo=tensorflow)](https://tensorflow.org/)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.95%2B-teal?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0%2B-red?style=for-the-badge&logo=sqlalchemy)](https://www.sqlalchemy.org/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Production--Ready-brightgreen?style=for-the-badge)]()
 
-> Enterprise-grade climate risk assessment powered by ensemble ML methods & deep learning
+> Enterprise-grade climate risk assessment API with real-time data processing and analysis
 > 
-> **95%+ Prediction Accuracy** | **Real-time Analysis** | **Production Ready**
+> **RESTful API** | **Asynchronous** | **Production Ready**
 
 [Features](#-features) •
 [Installation](#️-installation) •
-[Documentation](#-documentation) •
+[API Documentation](#-api-documentation) •
+[Architecture](#-architecture) •
 [Contributing](#-contributing)
 
 </div>
 
 ---
 
-## 📊 Project Impact
+## 📊 Project Overview
 
-<table>
-<tr>
-<td width="50%">
+A robust, scalable API for assessing climate-related risks, built with FastAPI and SQLAlchemy 2.0. This service provides endpoints for managing locations, weather data, and risk assessments with support for real-time data processing and analysis.
 
-### Key Applications
-- 🚨 Emergency response planning
-- 🏗️ Infrastructure protection
-- 🏥 Public health management
-- 📊 Resource allocation
-- 📜 Policy decision support
+### Key Features
 
-</td>
-<td>
+- **Location Management**
+  - Store and retrieve geographical locations
+  - Geocoding and reverse geocoding support
+  - Spatial queries for proximity-based searches
 
-### Core Benefits
-- 🎯 Critical risk assessment
-- ⚡ Early warning system
-- 🔍 Vulnerability analysis
-- 🫀 Health impact predictions
-- 📋 Adaptation strategies
+- **Weather Data**
+  - Historical weather data storage and retrieval
+  - Weather forecasts integration
+  - Weather condition tracking
 
-</td>
-</tr>
-</table>
+- **Risk Assessment**
+  - Multi-factor risk scoring
+  - Historical risk analysis
+  - Vulnerability assessment
 
-## 🚀 Features
+- **Authentication & Authorization**
+  - JWT-based authentication
+  - Role-based access control
+  - API key support
 
-### ML Capabilities
-```python
-def ensemble_framework():
-    models = {
-        'random_forest': RandomForestClassifier(),
-        'xgboost': XGBClassifier(),
-        'lightgbm': LGBMClassifier(),
-        'lstm': TimeSeriesLSTM()
-    }
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Python 3.10+
+- PostgreSQL 13+ (or SQLite for development)
+- Redis (for caching, optional)
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/climate-risk-api.git
+   cd climate-risk-api
+   ```
+
+2. Create and activate a virtual environment:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. Install dependencies:
+   ```bash
+   pip install -e ".[dev]"
+   ```
+
+4. Configure environment variables:
+   ```bash
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
+
+5. Initialize the database:
+   ```bash
+   alembic upgrade head
+   ```
+
+6. Run the development server:
+   ```bash
+   uvicorn src.app:app --reload
+   ```
+
+## 🏗️ Project Structure
+
+```
+climate-risk-api/
+├── alembic/               # Database migrations
+├── src/
+│   ├── climate_risk/      # Main application package
+│   │   ├── application/    # Application services
+│   │   ├── domain/         # Domain models and interfaces
+│   │   ├── infrastructure/ # Database and external service implementations
+│   │   └── interfaces/     # API endpoints and web interface
+│   └── app.py              # FastAPI application entry point
+├── tests/                  # Test suite
+├── .env.example            # Example environment variables
+├── pyproject.toml          # Project dependencies and configuration
+└── README.md               # This file
 ```
 
-### Analysis Engine
-- Real-time data processing
-- Multi-factor risk assessment
-- Confidence scoring (95%+ accuracy)
-- Automated recommendations
-- Health impact analysis
+## 📚 API Documentation
 
-## 💻 Technical Stack
+Once the application is running, you can access the following documentation:
 
-<table>
-<tr>
-<td>
+- **Swagger UI**: http://localhost:8000/api/v1/docs
+- **ReDoc**: http://localhost:8000/api/v1/redoc
+- **OpenAPI Schema**: http://localhost:8000/api/v1/openapi.json
 
-### 🤖 Machine Learning
-- scikit-learn `1.0+`
-- XGBoost `1.5+`
-- LightGBM `3.3+`
-- TensorFlow `2.7+`
+## 💻 Technologies Used
 
-</td>
-<td>
+### Backend
+- **Python 3.10+** - Core programming language
+- **FastAPI** - Web framework for building APIs
+- **SQLAlchemy 2.0** - ORM for database interactions
+- **Alembic** - Database migrations
+- **Pydantic** - Data validation and settings management
+- **JWT** - Authentication
+- **Redis** - Caching (optional)
 
-### 📊 Data Processing
-- NumPy `1.21+`
-- Pandas `1.4+`
-- Dask `2022.1+`
+### Development Tools
+- **pytest** - Testing framework
+- **black** - Code formatting
+- **mypy** - Static type checking
+- **ruff** - Linting
+- **pre-commit** - Git hooks
 
-</td>
-<td>
+## 🤝 Contributing
 
-### 📈 Visualization
-- Plotly `5.5+`
-- Dash `2.0+`
-- Matplotlib `3.5+`
+Contributions are welcome! Please follow these steps:
 
-</td>
-</tr>
-</table>
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- FastAPI community for the amazing framework
+- SQLAlchemy for the powerful ORM
+- All contributors who have helped improve this project
 
 ## ⚙️ Installation
 
 ```bash
 # Clone repository
-git clone https://github.com/username/climate-risk-assessment.git
+git clone https://github.com/yourusername/climate-risk-api.git
+cd climate-risk-api
 cd climate-risk-assessment
 
 # Create virtual environment

@@ -15,6 +15,7 @@ the functionality of the FastAPI application, including:
 from .versioning import VersioningMiddleware, VersionedAPIRoute, version
 from .rate_limiting import RateLimitMiddleware, RateLimitExceeded, get_rate_limiter
 from .security_headers import SecurityHeadersMiddleware, add_security_headers
+from .logging_middleware import LoggingMiddleware, get_logging_middleware
 
 __all__ = [
     'VersioningMiddleware',
@@ -25,4 +26,6 @@ __all__ = [
     'get_rate_limiter',
     'SecurityHeadersMiddleware',
     'add_security_headers',
+    'LoggingMiddleware',
+    'get_logging_middleware',
 ]

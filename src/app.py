@@ -16,7 +16,9 @@ from .interfaces.api.middleware import (
     LoggingMiddleware,
     VersioningMiddleware,
     RateLimitMiddleware,
-    get_rate_limiter
+    SecurityHeadersMiddleware,
+    get_rate_limiter,
+    add_security_headers,
 )
 
 # Configure logging
@@ -77,26 +79,49 @@ def configure_cors(app: FastAPI) -> None:
 
 
 def configure_middleware(app: FastAPI) -> None:
-    """Configure application middleware."""
-    # Add logging middleware
-    app.add_middleware(LoggingMiddleware)
+    """Configure application middleware.
     
-    # Add versioning middleware
+    The order of middleware is important! They are executed in reverse order.
+    The first middleware is the last to process the request and first to process the response.
+    """
+    # 1. Security headers (first to process response, last to process request)
+    add_security_headers(
+        app,
+        headers={
+            "Content-Security-Policy": "default-src 'self'; "
+                                    "script-src 'self' 'unsafe-inline' 'unsafe-eval'; "
+                                    "style-src 'self' 'unsafe-inline'; "
+                                    "img-src 'self' data: https:; "
+                                    "font-src 'self' data:; "
+                                    "connect-src 'self' https:;",
+            "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+            "Referrer-Policy": "strict-origin-when-cross-origin",
+            "X-Content-Type-Options": "nosniff",
+            "X-Frame-Options": "DENY",
+            "X-XSS-Protection": "1; mode=block",
+        }
+    )
+    
+    # 2. Rate limiting (before request processing starts)
+    if settings.RATE_LIMIT_ENABLED:
+        app.add_middleware(
+            RateLimitMiddleware,
+            default_limits={"default": settings.RATE_LIMIT_DEFAULT},
+            storage=settings.RATE_LIMIT_STORAGE,
+            redis_url=settings.REDIS_URL,
+        )
+    
+    # 3. Versioning (after rate limiting, before request processing)
     app.add_middleware(
         VersioningMiddleware,
-        default_version=settings.API_VERSION,
-        version_param="version",
-        version_header="Accept",
+        default_version=settings.API_DEFAULT_VERSION,
+        version_param=settings.API_VERSION_PARAM,
+        version_header=settings.API_VERSION_HEADER,
         version_regex=r"^v(\d+(\.\d+)*)$",
     )
     
-    # Add rate limiting middleware
-    app.add_middleware(
-        RateLimitMiddleware,
-        default_limits={"default": (100, 60)},  # 100 requests per minute
-        storage=settings.RATE_LIMIT_STORAGE,
-        redis_url=getattr(settings, "REDIS_URL", None),
-    )
+    # 4. Logging (last to process request, first to process response)
+    app.add_middleware(LoggingMiddleware)
 
 
 def configure_routers(app: FastAPI) -> None:
